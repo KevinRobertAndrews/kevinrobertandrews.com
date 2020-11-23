@@ -2,12 +2,14 @@ import React, { useState } from 'react'
 
 const Form = () => {
   const [name, setName] = useState('');
+  const [address, setAddress] = useState('');
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
 
     const data = {
-      name: name
+      name: name,
+      address: address
     }
 
     const options = {
@@ -18,17 +20,25 @@ const Form = () => {
       body: JSON.stringify(data)
     }
 
-    const response = await fetch('https://kevinrobertandrews.com/post-test', options)
-
-    console.log(response);
+    fetch('https://kevinrobertandrews.com/post-test', options).then(response => response.json())
+      .then(data => console.log(data));
   }
 
   return <form onSubmit={handleSubmit} className="form">
-    <label htmlFor="name">
-      Please enter your name:
+    <label htmlFor="name" className="form__label">
+      Please enter your name(s):
       <input type="text"
+        placeholder="Name"
         value={name}
         onChange={e => setName(e.target.value)}
+        required />
+    </label>
+    <label htmlFor="address" className="form__label">
+      Please enter your address:
+      <input type="text"
+        placeholder="Address"
+        value={address}
+        onChange={e => setAddress(e.target.value)}
         required />
     </label>
     <input type="submit" value="Submit" />
