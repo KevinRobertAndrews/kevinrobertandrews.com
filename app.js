@@ -1,7 +1,22 @@
-const path = require('path')
-const express = require('express')
-const cors = require('cors');
+const path = require('path');
+const express = require('express');
 const app = express();
+const helmet = require('helmet');
+const xss = require('xss-clean');
+
+const rateLimit = require("express-rate-limit");
+
+// Enable if you're behind a reverse proxy (Heroku, Bluemix, AWS ELB, Nginx, etc)
+// see https://expressjs.com/en/guide/behind-proxies.html
+app.set('trust proxy', 1);
+
+const limiter = rateLimit({
+	windowMs: 15 * 60 * 1000, // 15 minutes
+	max: 12 // limit each IP to 100 requests per windowMs
+});
+
+//  apply to all requests
+app.use(limiter);
 
 const JSONdb = require('simple-json-db');
 const db = new JSONdb('.//database.json');
@@ -9,6 +24,8 @@ const db = new JSONdb('.//database.json');
 // app.use(express.static('./client/build'))
 app.use(express.static('./christmas-cards/build'));
 
+app.use(helmet());
+app.use(xss())
 app.use(cors());
 app.use(express.json());
 
