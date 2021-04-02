@@ -1,5 +1,3 @@
-traveled-and-discovered
-
-node_modules
-
+node_modules/
+apps/
 .vscode
